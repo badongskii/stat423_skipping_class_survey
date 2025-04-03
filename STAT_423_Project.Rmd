@@ -9,8 +9,8 @@ install.packages("mosaic")
 library("mosaic")
 install.packages("ggplot2")
 library(ggplot2)
-setwd("/Users/hugo24/Documents/STAT 423")
-Skip_class <- read.csv("STAT Project Cleaned Data.csv")
+
+Skip_class <- read.csv("https://raw.githubusercontent.com/badongskii/stat423_skipping_class_survey/refs/heads/main/skippingclass_cleaned.csv")
 attach(Skip_class)
 Skip_class
 names(Skip_class)
