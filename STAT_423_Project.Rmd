@@ -18,33 +18,50 @@ Skip_class
 names(Skip_class)
 ```
 
-Applying modal imputation to fill nonresponeses
+Applying modal imputation to fill non-responses
 ```{r}
 #summary to show quick stats of each column in csv file. Reveals how many non responses in each.
 summary(Skip_class)
 
 ```
-Code to check which indicies are n/a
+Code to check which indices are n/a
 ```{r}
 which(is.na(Skip_class$Percentage.Skip))
 which(is.na(Skip_class$Types.Classes))
 which(is.na(Skip_class$Options.Main))
-whcih(is.na(Skip_class$Review.missed.material))
+which(is.na(Skip_class$Review.missed.material))
 ```
 Missing data in Percentage.Skip, Types.Classes, Options.Main and Review.missed.material.
-Find mean for each column which will be imputed later
+Find mean for each column which will be imputed later.
+Note: decided to do mode since almost all questions are categorical.
 ```{r}
-mean.percentage.skip <- favstats(~Percentage.Skip, data = Skip_class)$mean
-mean.types.classes <- favstats(~Types.Classes, data = Skip_class)$mean
-mean.options.main <- favstats(~Options.Main, data = Skip_class)$mean
-mean.review.material <- favstats(~Review.missed.material, data = Skip_class)$mean
+#mean.percentage.skip <- favstats(~Percentage.Skip, data = Skip_class)$mean
+#mean.types.classes <- favstats(~Types.Classes, data = Skip_class)$mean
+#mean.options.main <- favstats(~Options.Main, data = Skip_class)$mean
+#mean.review.material <- favstats(~Review.missed.material, data = Skip_class)$mean
 
 Skip_class.imputed <- Skip_class #copy of the data set
 
-Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mean.percentage.skip
-Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mean.types.classes
-Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mean.options.main
-Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mean.review.material
+#Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mean.percentage.skip
+#Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mean.types.classes
+#Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mean.options.main
+#Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mean.review.material
+
+Mode(Skip_class$Percentage.Skip, na.rm = T)
+mode.percentage.skip <- Mode(Skip_class$Percentage.Skip, na.rm = T)[[1]]
+Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mode.percentage.skip
+
+Mode(Skip_class$Types.Classes, na.rm = T)
+mode.type.classes <- Mode(Skip_class$Types.Classes, na.rm = T)[[1]]
+Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mode.type.classes
+
+Mode(Skip_class$Options.Main, na.rm = T)
+mode.options.main <- Mode(Skip_class$Options.Main, na.rm = T)[[1]]
+Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mode.options.main
+
+Mode(Skip_class$Review.missed.material, na.rm = T)
+mode.review.material <- Mode(Skip_class$Review.missed.material, na.rm = T)[[1]]
+Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mode.review.material
 
 Skip_class.imputed
 
@@ -54,6 +71,9 @@ Skip_class.imputed
 ```{r}
 summary(Skip_class.imputed)
 ```
+Data is now cleaned.
+
+
 
 
 ## Get the mean values from the data collected:
