@@ -64,7 +64,6 @@ mode.review.material <- Mode(Skip_class$Review.missed.material, na.rm = T)[[1]]
 Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mode.review.material
 
 Skip_class.imputed
-
 ```
 
 
