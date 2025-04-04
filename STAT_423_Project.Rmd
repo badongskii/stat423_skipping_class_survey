@@ -77,9 +77,9 @@ Data is now cleaned.
 
 ## Get the mean values from the data collected:
 ```{r cars}
-favstats(~Gender, data = Skip_class)
-favstats(~Gender, data = Skip_class)
-favstats(~Gender, data = Skip_class)
+favstats(~Gender, data = Skip_class.imputed)
+favstats(~Gender, data = Skip_class.imputed)
+favstats(~Gender, data = Skip_class.imputed)
 
 ```
 
