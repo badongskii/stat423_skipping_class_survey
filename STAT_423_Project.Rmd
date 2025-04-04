@@ -9,6 +9,8 @@ install.packages("mosaic")
 library("mosaic")
 install.packages("ggplot2")
 library(ggplot2)
+install.packages("DescTools")
+library(DescTools)
 
 Skip_class <- read.csv("https://raw.githubusercontent.com/badongskii/stat423_skipping_class_survey/refs/heads/main/skippingclass_cleaned.csv")
 attach(Skip_class)
@@ -16,9 +18,45 @@ Skip_class
 names(Skip_class)
 ```
 
+Applying modal imputation to fill nonresponeses
+```{r}
+#summary to show quick stats of each column in csv file. Reveals how many non responses in each.
+summary(Skip_class)
+
+```
+Code to check which indicies are n/a
+```{r}
+which(is.na(Skip_class$Percentage.Skip))
+which(is.na(Skip_class$Types.Classes))
+which(is.na(Skip_class$Options.Main))
+whcih(is.na(Skip_class$Review.missed.material))
+```
+Missing data in Percentage.Skip, Types.Classes, Options.Main and Review.missed.material.
+Find mean for each column which will be imputed later
+```{r}
+mean.percentage.skip <- favstats(~Percentage.Skip, data = Skip_class)$mean
+mean.types.classes <- favstats(~Types.Classes, data = Skip_class)$mean
+mean.options.main <- favstats(~Options.Main, data = Skip_class)$mean
+mean.review.material <- favstats(~Review.missed.material, data = Skip_class)$mean
+
+Skip_class.imputed <- Skip_class #copy of the data set
+
+Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mean.percentage.skip
+Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mean.types.classes
+Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mean.options.main
+Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mean.review.material
+
+Skip_class.imputed
+
+```
+
+
+```{r}
+summary(Skip_class.imputed)
+```
+
+
 ## Get the mean values from the data collected:
-
-
 ```{r cars}
 favstats(~Gender, data = Skip_class)
 favstats(~Gender, data = Skip_class)
