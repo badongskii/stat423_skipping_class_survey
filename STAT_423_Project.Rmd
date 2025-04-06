@@ -118,3 +118,24 @@ hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#Mean and Confidence Intervals for Percentage Classes Skipped
+
+n<-nrow(Skip_class)
+#total amount of science undergraduates
+N<-7400
+
+#Sample mean
+ybar<-mean(Skip_class.imputed$Percentage.Skip)
+
+#Sample sd
+s<- sd(Skip_class.imputed$Percentage.Skip)
+
+z<-qnorm(0.975)
+
+#Confidence interval
+lowbo<-ybar-z*sqrt(1-(n/N))*(s/sqrt(n))
+upbo<-ybar+z*sqrt(1-(n/N))*(s/sqrt(n))
+
+ybar
+c(lowbo, upbo)
