@@ -9,6 +9,8 @@ install.packages("mosaic")
 library("mosaic")
 install.packages("ggplot2")
 library(ggplot2)
+
+
 install.packages("DescTools")
 library(DescTools)
 
@@ -16,8 +18,8 @@ Skip_class <- read.csv("https://raw.githubusercontent.com/badongskii/stat423_ski
 attach(Skip_class)
 Skip_class
 names(Skip_class)
-```
 
+```
 Applying modal imputation to fill non-responses
 ```{r}
 #summary to show quick stats of each column in csv file. Reveals how many non responses in each.
@@ -73,22 +75,46 @@ summary(Skip_class.imputed)
 Data is now cleaned.
 
 
-
-
-## Get the mean values from the data collected:
-```{r cars}
-favstats(~Gender, data = Skip_class.imputed)
-favstats(~Gender, data = Skip_class.imputed)
-favstats(~Gender, data = Skip_class.imputed)
+#Compute a linear regression analyisis to determine our most important variables:
+```{r}
+skip_mod1 <- lm(`Percentage.Skip`~Gender+`Year.Study`+Courses+Reason+`Types.Classes`+`Options.Main`+`Review.missed.material`+`Grades.affected`+`Transport`+`Factor.not.to.skip`, data = Skip_class.imputed)
+summary(skip_mod1)
 
 ```
 
+
+## Get the mean values from the data collected:
+
+
+```{r}
+favstats(~Reason, data = Skip_class.imputed)
+favstats(~Year.Study, data = Skip_class.imputed)
+favstats(~Options.Main, data = Skip_class.imputed)
+favstats(~Factor.not.to.skip, data = Skip_class.imputed)
+
+
+```
+$$
+\begin{array}{lccc}
+                           &  Mean   &  Sd    &  n       \\[0.5ex]
+\hline
+\text{Reason}    &   4.67     &   2.98      & 40                     \\[0.5ex]
+\text{Year of Study}          &   2.5      &   1.13       &  40    &       \\[0.5ex]
+\text{Options or Main Classes} &  1.27  & 0.452    & 40     \\[0.5ex]  
+\text{Factor to not Skip Class}   &  2.7 & 1.02 & 40     \\[0.5ex]
+
+\hline 
+\end{array}
+$$
+
 ## Including Plots
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+hist(`Reason`,col="tomato2")
+hist(`Year.Study`,col="gold2")
+hist(`Options.Main`, col="lightskyblue")
+hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
