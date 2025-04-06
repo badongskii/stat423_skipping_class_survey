@@ -117,4 +117,26 @@ hist(`Options.Main`, col="lightskyblue")
 hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
 
+Reason to not skip class proportion (Top 2)
+```{r}
+n <- 40
+N <- 7400
+
+most.combined <- sum(Skip_class.imputed$Factor.not.to.skip == 2) + 
+                  sum(Skip_class.imputed$Factor.not.to.skip == 3)
+
+prop.most.combined <- most.combined / n
+
+#CI with 95% confidence
+z <- qnorm(0.95)
+most.combined.error <- sqrt((prop.most.combined*(1 - prop.most.combined)/(n - 1))*((N - n)/N))
+
+most.combined.lb <- prop.most.combined - z * most.combined.error
+most.combined.ub <- prop.most.combined + z * most.combined.error
+
+cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
+```
+Conclusion: We can say with 95% confidence that between 53% and 78% of science students would choose not to skip class due to required attendance and lack of online material.
+
+
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
