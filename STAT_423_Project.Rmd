@@ -161,3 +161,44 @@ upbo<-ybar+z*sqrt(1-(n/N))*(s/sqrt(n))
 
 ybar
 c(lowbo, upbo)
+
+
+
+# Define variables
+y<-Skip_class.imputed$Percentage.Skip
+x <- Skip_class.imputed$Year.Study
+
+# Sample size and population size
+
+# Sample means
+xbar <- mean(x)
+
+# Known population mean of x (Year of Study)
+# If unknown, use xbar as estimate
+xU <- 2.5  # Given or assumed known
+
+# Regression coefficient (slope)
+b1 <- sum((x - xbar) * (y - ybar)) / sum((x - xbar)^2)
+
+# Regression estimate of population mean
+yreg <- ybar + b1 * (xU - xbar)
+
+# Standard error for regression estimator (with FPC)
+residuals <- y - (b1 * x + (ybar - b1 * xbar))  # regression residuals
+s2e <- sum(residuals^2) / (n - 2)
+seyreg <- sqrt((1 - n/N) * (s2e / n))
+
+# 95% Confidence Interval
+z <- qnorm(0.975)
+reglower <- yreg - z * seyreg
+regupper <- yreg + z * seyreg
+
+# Output results
+yreg
+c(reglower, regupper)
+
+# Ratio estimate of yU
+ybar <- mean(y)
+xbar <- mean(x)
+xU <- 2.5  # use known population mean if known, or sample mean
+ratioestimate <- (ybar / xbar) * xU
