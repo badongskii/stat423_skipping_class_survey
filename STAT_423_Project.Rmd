@@ -140,7 +140,7 @@ Conclusion: We can say with 95% confidence that between 53% and 78% of science s
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
+```{r}
 #Mean and Confidence Intervals for Percentage Classes Skipped
 
 n<-nrow(Skip_class)
@@ -161,9 +161,9 @@ upbo<-ybar+z*sqrt(1-(n/N))*(s/sqrt(n))
 
 ybar
 c(lowbo, upbo)
+```
 
-
-
+```{r}
 # Define variables
 y<-Skip_class.imputed$Percentage.Skip
 x <- Skip_class.imputed$Year.Study
@@ -196,9 +196,12 @@ regupper <- yreg + z * seyreg
 # Output results
 yreg
 c(reglower, regupper)
+```
 
+```{r}
 # Ratio estimate of yU
 ybar <- mean(y)
 xbar <- mean(x)
 xU <- 2.5  # use known population mean if known, or sample mean
 ratioestimate <- (ybar / xbar) * xU
+```
