@@ -128,7 +128,7 @@ most.combined <- sum(Skip_class.imputed$Factor.not.to.skip == 2) +
 prop.most.combined <- most.combined / n
 
 #CI with 95% confidence
-z <- qnorm(0.95)
+z <- qnorm(0.975)
 most.combined.error <- sqrt((prop.most.combined*(1 - prop.most.combined)/(n - 1))*((N - n)/N))
 
 most.combined.lb <- prop.most.combined - z * most.combined.error
@@ -136,7 +136,57 @@ most.combined.ub <- prop.most.combined + z * most.combined.error
 
 cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
 ```
-Conclusion: We can say with 95% confidence that between 53% and 78% of science students would choose not to skip class due to required attendance and lack of online material.
+Conclusion: We can say with 95% confidence that between 50% and 80% of science students would choose not to skip class due to required attendance and lack of online material.
+
+Data visualization for Proportions
+
+```{r}
+participation <- sum(Skip_class.imputed$Factor.not.to.skip == 1)
+participation.p <- participation / n
+
+participation.error <- z * sqrt((participation.p*(1 - participation.p)/(n - 1))*((N - n)/N))
+
+participation.lb <- participation.p - participation.error
+participation.ub <- participation.p + participation.error
+
+c(participation.lb, participation.ub)
+```
+
+```{r}
+marks <- sum(Skip_class.imputed$Factor.not.to.skip == 2)
+marks.p <- marks / n
+
+marks.error <- z * sqrt((marks.p*(1 - marks.p)/(n - 1))*((N - n)/N))
+
+marks.lb <- marks.p - marks.error
+marks.ub <- marks.p + marks.error
+
+c(marks.lb, marks.ub)
+```
+
+```{r}
+no.material <- sum(Skip_class.imputed$Factor.not.to.skip == 3)
+no.material.p <- no.material / n
+
+no.material.error <- z * sqrt((no.material.p*(1 - no.material.p)/(n - 1))*((N - n)/N))
+
+no.material.lb <- no.material.p - no.material.error
+no.material.ub <- no.material.p + no.material.error
+
+c(no.material.lb, no.material.ub)
+```
+
+```{r}
+being.diligent <- sum(Skip_class.imputed$Factor.not.to.skip == 4)
+being.diligent.p <- being.diligent / n
+
+being.diligent.error <- z * sqrt((being.diligent.p*(1 - being.diligent.p)/(n - 1))*((N - n)/N))
+
+diligent.lb <- being.diligent.p - being.diligent.error
+diligent.ub <- being.diligent.p + being.diligent.error
+
+c(diligent.lb, diligent.ub)
+```
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
