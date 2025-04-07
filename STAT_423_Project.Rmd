@@ -138,7 +138,7 @@ cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
 ```
 Conclusion: We can say with 95% confidence that between 50% and 80% of science students would choose not to skip class due to required attendance and lack of online material.
 
-Data visualization for Proportions
+Finding the proportion for each option on reasons science students attend class. 
 
 ```{r}
 participation <- sum(Skip_class.imputed$Factor.not.to.skip == 1)
@@ -212,6 +212,53 @@ upbo<-ybar+z*sqrt(1-(n/N))*(s/sqrt(n))
 ybar
 c(lowbo, upbo)
 ```
+
+
+Attempting bootstrap with skip class percentages
+```{r}
+Nresamples <- 5000
+n <- length(Skip_class.imputed$Percentage.Skip)
+
+bootmean.skip <- numeric(Nresamples)
+bootsd.skip <- numeric(Nresamples)
+
+for(i in 1:Nresamples)
+{ bootdata <- sample(Skip_class.imputed$Percentage.Skip, n, replace = T)
+
+  bootmean.skip[i] <- mean(bootdata)
+  bootsd.skip[i] <- sd(bootdata)
+}
+
+bootstrap.skip.df = data.frame(bootmean.skip, bootsd.skip)
+
+```
+
+```{r}
+
+tail(bootstrap.skip.df) #checking the data
+
+```
+
+```{r}
+
+favstats(bootmean.skip, bootstrap.skip.df)
+
+```
+Visualizations of bootstrap
+
+```{r}
+
+ggplot(data=bootstrap.skip.df, aes(x = bootmean.skip)) + geom_histogram(col='red', fill='blue', binwidth=2) + xlab("Values of Bootstrap Statistic (Mean)") + ylab("Count") + ggtitle("Bootstrap Distribution of the Sample Mean")
+
+```
+
+```{r}
+
+qdata(~bootmean.skip, c(0.025, 0.975), data = bootstrap.skip.df) #mean confidence interval of Percentage of Skipping class (95% confidence)
+
+```
+We can infer that bootstrapping in this case does not show a noticeable difference when calculating the CI of skipping class percentage.
+
 
 ```{r}
 # Define variables
