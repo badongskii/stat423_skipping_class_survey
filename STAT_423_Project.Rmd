@@ -116,48 +116,46 @@ hist(`Year.Study`,col="gold2")
 hist(`Options.Main`, col="lightskyblue")
 hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
-
-Reason to not skip class proportion (Top 2)
 ```{r}
-n <- 40
-N <- 7400
+Science_pop <- 7400
+Sample_sn <- 40
+Study_num <- 14
+Not_useful <- 13
+Other_reason <- 7
+Study_p <- 14/40
+NUsef_p <- 13/40
+Other_p <- 7/40
 
-most.combined <- sum(Skip_class.imputed$Factor.not.to.skip == 2) + 
-                  sum(Skip_class.imputed$Factor.not.to.skip == 3)
+moe_stud <- qnorm(.975)*sqrt((Study_p*(1-Study_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_stud
+lowstudy <- Study_p-moe_stud
+upstudy <- Study_p+moe_stud
+lowstudy
+upstudy
 
-prop.most.combined <- most.combined / n
+moe_usef <- qnorm(.975)*sqrt((NUsef_p*(1-NUsef_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_usef
+lowusef <- NUsef_p-moe_usef
+upusef <- NUsef_p+moe_usef
+lowusef
+upusef
 
-#CI with 95% confidence
-z <- qnorm(0.95)
-most.combined.error <- sqrt((prop.most.combined*(1 - prop.most.combined)/(n - 1))*((N - n)/N))
+moe_other <- qnorm(.975)*sqrt((Other_p*(1-Other_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_other
+lowother <- Other_p-moe_other
+upother <- Other_p+moe_other
+lowother
+upother
 
-most.combined.lb <- prop.most.combined - z * most.combined.error
-most.combined.ub <- prop.most.combined + z * most.combined.error
 
-cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
 ```
-Conclusion: We can say with 95% confidence that between 53% and 78% of science students would choose not to skip class due to required attendance and lack of online material.
+
+Selected the most chosen reasons to skip class: (Students skip class to use that time for study purposes, Students believe the class they skip is not interesting/useful enough, Other reasons involving: Optimizing time management, Tiredness, Not being able to focus)
+
+CI for average skip classes 
+Proportion analysis for year of study
+Proportion analysis for Reasons
+
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-#Mean and Confidence Intervals for Percentage Classes Skipped
-
-n<-nrow(Skip_class)
-#total amount of science undergraduates
-N<-7400
-
-#Sample mean
-ybar<-mean(Skip_class.imputed$Percentage.Skip)
-
-#Sample sd
-s<- sd(Skip_class.imputed$Percentage.Skip)
-
-z<-qnorm(0.975)
-
-#Confidence interval
-lowbo<-ybar-z*sqrt(1-(n/N))*(s/sqrt(n))
-upbo<-ybar+z*sqrt(1-(n/N))*(s/sqrt(n))
-
-ybar
-c(lowbo, upbo)
