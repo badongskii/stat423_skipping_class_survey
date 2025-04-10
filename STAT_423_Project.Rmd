@@ -116,6 +116,7 @@ hist(`Year.Study`,col="gold2")
 hist(`Options.Main`, col="lightskyblue")
 hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
+##Reasons not to skip class (Population Proportion Estimates)
 
 Reason to not skip class proportion (Top 2)
 ```{r}
@@ -137,6 +138,53 @@ most.combined.ub <- prop.most.combined + z * most.combined.error
 cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
 ```
 Conclusion: We can say with 95% confidence that between 50% and 80% of science students would choose not to skip class due to required attendance and lack of online material.
+
+BOOTSTRAPPING TOP 2 REASONS NOT TO SKIP
+```{r}
+nsize <- 40
+
+most.combined <- sum(Skip_class.imputed$Factor.not.to.skip == 2) + 
+                  sum(Skip_class.imputed$Factor.not.to.skip == 3)
+
+prop.most.combined <- most.combined / n
+prop.most.combined
+
+notconfident.vector <- c(rep(0, nsize*(1-prop.most.combined)))
+confident.vector <- c(rep(1, nsize*(prop.most.combined)))
+
+main.not.skip <- c(notconfident.vector, confident.vector)
+
+Nbootstrap <- 5000
+
+samp.bootstrap <- numeric(Nbootstrap)
+
+for(i in 1:Nbootstrap)
+{numsuccess <- sum(sample(main.not.skip, nsize, replace = T))
+ samp.bootstrap[i] <- (numsuccess) / nsize
+}
+
+prop.bootstrap1 <- data.frame(samp.bootstrap)
+
+```
+Checking the prop.bootstrap1 data frame
+```{r}
+head(prop.bootstrap1, 5)
+```
+
+```{r}
+tail(prop.bootstrap1, 5)
+```
+Visualization of the bootstrap proportion
+```{r}
+ggplot(data=prop.bootstrap1, aes(x = samp.bootstrap)) + geom_histogram(col='red', fill='blue', binwidth=0.01) + xlab("Values of Bootstrap Statistic (Sample Proportion)") + ylab("Count") + ggtitle("Bootstrap Distribution of Sample Proportion")
+
+```
+Calculating the bootstrap proportion CI with 95% confidence
+```{r}
+qdata(~samp.bootstrap, c(0.025, 0.975), prop.bootstrap1)
+```
+Results are basically identical to original CI calculation
+
 
 Finding the proportion for each option on reasons science students attend class. 
 
@@ -216,16 +264,17 @@ c(lowbo, upbo)
 
 Attempting bootstrap with skip class percentages
 ```{r}
-Nresamples <- 5000
-n <- length(Skip_class.imputed$Percentage.Skip)
+Nresamples <- 5000 #sets the number of re samples to 5000
+n <- length(Skip_class.imputed$Percentage.Skip) #receives the sample size of the original sample survey which is 40
 
-bootmean.skip <- numeric(Nresamples)
-bootsd.skip <- numeric(Nresamples)
+bootmean.skip <- numeric(Nresamples) #creates a vector that holds all the 5000 values of the bootstrap statistic which is the mean here
 
-for(i in 1:Nresamples)
-{ bootdata <- sample(Skip_class.imputed$Percentage.Skip, n, replace = T)
+bootsd.skip <- numeric(Nresamples) #does the same as the previous vector but for standard deviation
 
-  bootmean.skip[i] <- mean(bootdata)
+for(i in 1:Nresamples) #initiates for loop
+{ bootdata <- sample(Skip_class.imputed$Percentage.Skip, n, replace = T) #resamples the 40 percentages then stored in bootdata
+
+  bootmean.skip[i] <- mean(bootdata) #computes the mean of each data 
   bootsd.skip[i] <- sd(bootdata)
 }
 
