@@ -236,7 +236,7 @@ diligent.ub <- being.diligent.p + being.diligent.error
 c(diligent.lb, diligent.ub)
 ```
 
-#Boxplot visualization for reasons not to skip class
+#Barplot visualization for reasons not to skip class
 ```{R}
 possible.responses <- c("Participation", "Marks", "Lack of online material", "Being diligent", "Other")
 
