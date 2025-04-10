@@ -236,6 +236,32 @@ diligent.ub <- being.diligent.p + being.diligent.error
 c(diligent.lb, diligent.ub)
 ```
 
+#Boxplot visualization for reasons not to skip class
+```{R}
+possible.responses <- c("Participation", "Marks", "Lack of online material", "Being diligent", "Other")
+
+all.prop <- c(participation.p, marks.p, no.material.p, being.diligent.p)
+all.lb <- c(participation.lb, marks.lb, no.material.lb, diligent.lb)
+all.ub <- c(participation.ub, marks.ub, no.material.ub, diligent.ub)
+
+plot_data <- data.frame(
+  response = possible.responses[1:4],  # Only 4 items to match all.prop
+  prop = all.prop,
+  lb = all.lb,
+  ub = all.ub)
+
+ggplot(plot_data, aes(x = response, y = prop, fill = response)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin = lb, ymax = ub),  
+    color = "black") + 
+  
+  labs(title = "Reasons for Students Not to Skipping Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
+  theme_minimal()
+
+```
+
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 ```{r}
