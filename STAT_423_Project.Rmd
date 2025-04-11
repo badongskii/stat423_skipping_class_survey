@@ -182,8 +182,8 @@ ggplot(data, aes(x = responses, y = prop, fill = responses)) +
     aes(ymin =lb, ymax =ub),  
     color = "black") + 
     
-  labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
-  scale_color_brewer(palette = "Paired")
+  labs(title = "Reasons for Students to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
+  scale_color_brewer(palette = "Bupu")
 
 
 ```
@@ -329,7 +329,7 @@ ggplot(plot_data, aes(x = possible.responses, y = all.prop, fill = possible.resp
     color = "black") + 
     
   labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
-  scale_color_brewer(palette = "Paired")
+  scale_color_brewer(palette = "Hue")
 
 ```
 
@@ -462,8 +462,8 @@ ggplot(Skip_class.imputed, aes(x = Year.Study, y = Percentage.Skip, fill = Year.
   geom_boxplot() +
   labs(title = "Percentage Skipped by Year of Study",
        x = "Year of Study",
-       y = "Percentage Skipped in %") +
-  scale_color_brewer(palette = "pastell1")
+       y = "Percentage Skipped in %") 
+  #scale_color_brewer(palette = "")
 
 
 ```
