@@ -176,7 +176,7 @@ tail(prop.bootstrap1, 5)
 ```
 Visualization of the bootstrap proportion
 ```{r}
-ggplot(data=prop.bootstrap1, aes(x = samp.bootstrap)) + geom_histogram(col='red', fill='blue', binwidth=0.01) + xlab("Values of Bootstrap Statistic (Sample Proportion)") + ylab("Count") + ggtitle("Bootstrap Distribution of Sample Proportion")
+ggplot(data=prop.bootstrap1, aes(x = samp.bootstrap)) + geom_histogram(col='black', fill='lightblue', binwidth=0.025) + xlab("Values of Bootstrap Statistic (Sample Proportion)") + ylab("Count") + ggtitle("Bootstrap Distribution of Sample Proportion")
 
 ```
 Calculating the bootstrap proportion CI with 95% confidence
@@ -238,26 +238,22 @@ c(diligent.lb, diligent.ub)
 
 #Barplot visualization for reasons not to skip class
 ```{R}
-possible.responses <- c("Participation", "Marks", "Lack of online material", "Being diligent", "Other")
+possible.responses <- c("Participation", "Marks", "Lack of online material", "Being diligent")
 
 all.prop <- c(participation.p, marks.p, no.material.p, being.diligent.p)
 all.lb <- c(participation.lb, marks.lb, no.material.lb, diligent.lb)
 all.ub <- c(participation.ub, marks.ub, no.material.ub, diligent.ub)
 
-plot_data <- data.frame(
-  response = possible.responses[1:4],  # Only 4 items to match all.prop
-  prop = all.prop,
-  lb = all.lb,
-  ub = all.ub)
+plot_data <- data.frame(response = possible.responses, prop = all.prop, lb = all.lb, ub = all.ub)
 
 ggplot(plot_data, aes(x = response, y = prop, fill = response)) + 
   geom_bar(stat = "identity") +
   geom_errorbar(
     aes(ymin = lb, ymax = ub),  
     color = "black") + 
-  
+    
   labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
-  theme_minimal()
+  scale_color_brewer(palette = "Paired")
 
 ```
 
@@ -323,7 +319,7 @@ Visualizations of bootstrap
 
 ```{r}
 
-ggplot(data=bootstrap.skip.df, aes(x = bootmean.skip)) + geom_histogram(col='red', fill='blue', binwidth=2) + xlab("Values of Bootstrap Statistic (Mean)") + ylab("Count") + ggtitle("Bootstrap Distribution of the Sample Mean")
+ggplot(data=bootstrap.skip.df, aes(x = bootmean.skip)) + geom_histogram(col='black', fill='lightblue', binwidth=1) + xlab("Values of Bootstrap Statistic (Mean)") + ylab("Count") + ggtitle("Bootstrap Distribution of the Sample Mean")
 
 ```
 
@@ -371,20 +367,25 @@ c(reglower, regupper)
 ```
 ##Boxplot visualization for the class skip percentage
 ```{r}
-#First me must find the percentage of classes skipped and their year of study
-
-
-
-
+ggplot(Skip_class.imputed, aes(y = Percentage.Skip)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Percentage of Classes Skipped", y = "Percentage Skipped (%)")
 
 ```
 
 
-##Boxplot visualization for the class skip percentage
+##Boxplot visualization for the class skip percentage in correlation to year of study
 ```{r}
 
 
+Skip_class.imputed$Year.Study <- factor(Skip_class.imputed$Year.Study)
 
+ggplot(Skip_class.imputed, aes(x = Year.Study, y = Percentage.Skip, fill = Year.Study)) +
+  geom_boxplot() +
+  labs(title = "Percentage Skipped by Year of Study",
+       x = "Year of Study",
+       y = "Percentage Skipped %") +
+  scale_color_brewer(palette = "BuPu")
 
 
 ```
