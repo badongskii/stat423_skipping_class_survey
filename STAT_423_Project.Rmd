@@ -288,6 +288,7 @@ c(lowbo, upbo)
 ```
 
 
+
 Attempting bootstrap with skip class percentages
 ```{r}
 Nresamples <- 5000 #sets the number of re samples to 5000
@@ -369,6 +370,7 @@ regupper <- yreg + z * seyreg
 yreg
 c(reglower, regupper)
 ```
+
 ##Boxplot visualization for the class skip percentage
 ```{r}
 
@@ -377,6 +379,7 @@ c(reglower, regupper)
 
 
 ```
+
 
 
 ```{r}
