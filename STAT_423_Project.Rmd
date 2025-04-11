@@ -256,7 +256,7 @@ ggplot(plot_data, aes(x = response, y = prop, fill = response)) +
     aes(ymin = lb, ymax = ub),  
     color = "black") + 
   
-  labs(title = "Reasons for Students Not to Skipping Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
+  labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
   theme_minimal()
 
 ```
@@ -369,6 +369,16 @@ regupper <- yreg + z * seyreg
 yreg
 c(reglower, regupper)
 ```
+##Boxplot visualization for the class skip percentage
+```{r}
+#First me must find the percentage of classes skipped and their year of study
+
+
+
+
+
+```
+
 
 ```{r}
 # Ratio estimate of yU
