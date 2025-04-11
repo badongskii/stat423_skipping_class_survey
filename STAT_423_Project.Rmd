@@ -380,6 +380,17 @@ c(reglower, regupper)
 ```
 
 
+##Boxplot visualization for the class skip percentage
+```{r}
+
+
+
+
+
+```
+
+
+
 ```{r}
 # Ratio estimate of yU
 ybar <- mean(y)
