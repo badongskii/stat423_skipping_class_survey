@@ -28,6 +28,7 @@ summary(Skip_class)
 ```
 Code to check which indices are n/a
 ```{r}
+#after seeing which columns had non responses, code below indicates which indicies have the non responses
 which(is.na(Skip_class$Percentage.Skip))
 which(is.na(Skip_class$Types.Classes))
 which(is.na(Skip_class$Options.Main))
@@ -37,33 +38,30 @@ Missing data in Percentage.Skip, Types.Classes, Options.Main and Review.missed.m
 Find mean for each column which will be imputed later.
 Note: decided to do mode since almost all questions are categorical.
 ```{r}
-#mean.percentage.skip <- favstats(~Percentage.Skip, data = Skip_class)$mean
-#mean.types.classes <- favstats(~Types.Classes, data = Skip_class)$mean
-#mean.options.main <- favstats(~Options.Main, data = Skip_class)$mean
-#mean.review.material <- favstats(~Review.missed.material, data = Skip_class)$mean
+mean.percentage.skip <- favstats(~Percentage.Skip, data = Skip_class)$mean
+
 
 Skip_class.imputed <- Skip_class #copy of the data set
 
-#Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mean.percentage.skip
-#Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mean.types.classes
-#Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mean.options.main
-#Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mean.review.material
+Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mean.percentage.skip
 
-Mode(Skip_class$Percentage.Skip, na.rm = T)
-mode.percentage.skip <- Mode(Skip_class$Percentage.Skip, na.rm = T)[[1]]
-Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mode.percentage.skip
 
-Mode(Skip_class$Types.Classes, na.rm = T)
-mode.type.classes <- Mode(Skip_class$Types.Classes, na.rm = T)[[1]]
-Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mode.type.classes
+#the mode function 
+#Mode(Skip_class$Percentage.Skip, na.rm = T)
+#mode.percentage.skip <- Mode(Skip_class$Percentage.Skip, na.rm = T)[[1]]
+#Skip_class.imputed$Percentage.Skip[which(is.na(Skip_class$Percentage.Skip))] <- mode.percentage.skip
 
-Mode(Skip_class$Options.Main, na.rm = T)
-mode.options.main <- Mode(Skip_class$Options.Main, na.rm = T)[[1]]
-Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mode.options.main
+Mode(Skip_class$Types.Classes, na.rm = T) #computes the mode of the types of classes before imputing the data 
+mode.type.classes <- Mode(Skip_class$Types.Classes, na.rm = T)[[1]] #this chooses the mode
+Skip_class.imputed$Types.Classes[which(is.na(Skip_class$Types.Classes))] <- mode.type.classes #imputes the mode into the n/a within the types.classes data set
 
-Mode(Skip_class$Review.missed.material, na.rm = T)
-mode.review.material <- Mode(Skip_class$Review.missed.material, na.rm = T)[[1]]
-Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mode.review.material
+Mode(Skip_class$Options.Main, na.rm = T) #computes the mode of options.main before imputing the data
+mode.options.main <- Mode(Skip_class$Options.Main, na.rm = T)[[1]] #this chooses the mode to impute
+Skip_class.imputed$Options.Main[which(is.na(Skip_class$Options.Main))] <- mode.options.main #imputes the data into the n/a within the options.main
+
+Mode(Skip_class$Review.missed.material, na.rm = T) #computes the mode of Review.missed.material before imputing the data
+mode.review.material <- Mode(Skip_class$Review.missed.material, na.rm = T)[[1]] #this chooses the mode to impute
+Skip_class.imputed$Review.missed.material[which(is.na(Review.missed.material))] <- mode.review.material #imputes the data into the n/a within the Review.missed.material
 
 Skip_class.imputed
 ```
@@ -116,24 +114,99 @@ hist(`Year.Study`,col="gold2")
 hist(`Options.Main`, col="lightskyblue")
 hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
+#Reasons students would skip class
+```{r}
+Science_pop <- 7400
+Sample_sn <- 40
+Study_num <- 14
+Not_useful <- 13
+Other_reason <- 7
+Study_p <- 14/40
+NUsef_p <- 13/40
+Other_p <- 7/40
+Person_p <- 2/40
+
+moe_stud <- qnorm(.975)*sqrt((Study_p*(1-Study_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_stud
+lowstudy <- Study_p-moe_stud
+upstudy <- Study_p+moe_stud
+lowstudy
+upstudy
+
+moe_usef <- qnorm(.975)*sqrt((NUsef_p*(1-NUsef_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_usef
+lowusef <- NUsef_p-moe_usef
+upusef <- NUsef_p+moe_usef
+lowusef
+upusef
+
+moe_other <- qnorm(.975)*sqrt((Other_p*(1-Other_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_other
+lowother <- Other_p-moe_other
+upother <- Other_p+moe_other
+lowother
+upother
+
+moe_person <- qnorm(.975)*sqrt((Person_p*(1-Person_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_person
+lowperson <- Person_p-moe_person
+uperson <- Person_p+moe_person
+lowperson
+uperson
+
+misc.p <- 6/40
+
+moe_misc <- qnorm(0.975)*sqrt((misc.p*(1-misc.p)/39)*((Science_pop-Sample_sn)/Science_pop))
+
+misc.lb <- misc.p - moe_misc
+misc.ub <- misc.p + moe_misc
+```
+
+Data visualization
+```{r}
+#creating a vector with all possible responses for reasons students would not skip class
+responses <- c("Study", "Not Interesting/Useful", "Other", "3 Misc. Options")
+
+#combined all proportions, lower bounds and upper bounds of each response and saved them in corresponding vectors
+prop <- c(Study_p, NUsef_p, Other_p, misc.p)
+lb <- c(lowstudy, lowusef, lowother, misc.lb)
+ub <- c(upstudy, upusef, upother, misc.ub)
+
+
+data <- data.frame(responses, prop, lb, ub)
+
+#plotting all the confidence intervals and answer proportions into a bar plot to compare each response
+ggplot(data, aes(x = responses, y = prop, fill = responses)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin =lb, ymax =ub),  
+    color = "black") + 
+    
+  labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
+  scale_color_brewer(palette = "Paired")
+
+
+```
+
+
 ##Reasons not to skip class (Population Proportion Estimates)
 
 Reason to not skip class proportion (Top 2)
 ```{r}
-n <- 40
-N <- 7400
+n <- 40 #sample size
+N <- 7400 #population size
 
 most.combined <- sum(Skip_class.imputed$Factor.not.to.skip == 2) + 
-                  sum(Skip_class.imputed$Factor.not.to.skip == 3)
+                  sum(Skip_class.imputed$Factor.not.to.skip == 3) #combining the count of the top two answers chosen into a single variable
 
-prop.most.combined <- most.combined / n
+prop.most.combined <- most.combined / n #sample proportion of the top two most chosen response
 
 #CI with 95% confidence
 z <- qnorm(0.975)
-most.combined.error <- sqrt((prop.most.combined*(1 - prop.most.combined)/(n - 1))*((N - n)/N))
+most.combined.error <- sqrt((prop.most.combined*(1 - prop.most.combined)/(n - 1))*((N - n)/N)) #error calculation
 
-most.combined.lb <- prop.most.combined - z * most.combined.error
-most.combined.ub <- prop.most.combined + z * most.combined.error
+most.combined.lb <- prop.most.combined - z * most.combined.error #lower bound for CI
+most.combined.ub <- prop.most.combined + z * most.combined.error #upper bound for CI
 
 cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
 ```
@@ -176,7 +249,7 @@ tail(prop.bootstrap1, 5)
 ```
 Visualization of the bootstrap proportion
 ```{r}
-ggplot(data=prop.bootstrap1, aes(x = samp.bootstrap)) + geom_histogram(col='red', fill='blue', binwidth=0.01) + xlab("Values of Bootstrap Statistic (Sample Proportion)") + ylab("Count") + ggtitle("Bootstrap Distribution of Sample Proportion")
+ggplot(data=prop.bootstrap1, aes(x = samp.bootstrap)) + geom_histogram(col='black', fill='lightblue', binwidth=0.025) + xlab("Values of Bootstrap Statistic (Sample Proportion)") + ylab("Count") + ggtitle("Bootstrap Distribution of Sample Proportion")
 
 ```
 Calculating the bootstrap proportion CI with 95% confidence
@@ -187,15 +260,15 @@ Results are basically identical to original CI calculation
 
 
 Finding the proportion for each option on reasons science students attend class. 
-
+First response was commented. Same procedure for the other questions.
 ```{r}
-participation <- sum(Skip_class.imputed$Factor.not.to.skip == 1)
-participation.p <- participation / n
+participation <- sum(Skip_class.imputed$Factor.not.to.skip == 1) #counts the number of participation responses in the csv file
+participation.p <- participation / n #find the sample proportion by dividing by n=40
 
-participation.error <- z * sqrt((participation.p*(1 - participation.p)/(n - 1))*((N - n)/N))
+participation.error <- z * sqrt((participation.p*(1 - participation.p)/(n - 1))*((N - n)/N)) #error calculation 
 
-participation.lb <- participation.p - participation.error
-participation.ub <- participation.p + participation.error
+participation.lb <- participation.p - participation.error #calculated lower bound for CI
+participation.ub <- participation.p + participation.error #calculated upper bound for CI
 
 c(participation.lb, participation.ub)
 ```
@@ -238,26 +311,25 @@ c(diligent.lb, diligent.ub)
 
 #Barplot visualization for reasons not to skip class
 ```{R}
-possible.responses <- c("Participation", "Marks", "Lack of online material", "Being diligent", "Other")
+#creating a vector with all possible responses for reasons students would not skip class
+possible.responses <- c("Participation", "Marks", "Lack of online material", "Being diligent")
 
+#combined all proportions, lower bounds and upper bounds of each response and saved them in corresponding vectors
 all.prop <- c(participation.p, marks.p, no.material.p, being.diligent.p)
 all.lb <- c(participation.lb, marks.lb, no.material.lb, diligent.lb)
 all.ub <- c(participation.ub, marks.ub, no.material.ub, diligent.ub)
 
-plot_data <- data.frame(
-  response = possible.responses[1:4],  # Only 4 items to match all.prop
-  prop = all.prop,
-  lb = all.lb,
-  ub = all.ub)
+plot_data <- data.frame(possible.responses, all.prop, all.lb, all.ub)
 
-ggplot(plot_data, aes(x = response, y = prop, fill = response)) + 
+#plotting all the confidence intervals and answer proportions into a bar plot to compare each response
+ggplot(plot_data, aes(x = possible.responses, y = all.prop, fill = possible.responses)) + 
   geom_bar(stat = "identity") +
   geom_errorbar(
-    aes(ymin = lb, ymax = ub),  
+    aes(ymin = all.lb, ymax = all.ub),  
     color = "black") + 
-  
+    
   labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
-  theme_minimal()
+  scale_color_brewer(palette = "Paired")
 
 ```
 
@@ -323,7 +395,7 @@ Visualizations of bootstrap
 
 ```{r}
 
-ggplot(data=bootstrap.skip.df, aes(x = bootmean.skip)) + geom_histogram(col='red', fill='blue', binwidth=2) + xlab("Values of Bootstrap Statistic (Mean)") + ylab("Count") + ggtitle("Bootstrap Distribution of the Sample Mean")
+ggplot(data=bootstrap.skip.df, aes(x = bootmean.skip)) + geom_histogram(col='black', fill='lightblue', binwidth=1) + xlab("Values of Bootstrap Statistic (Mean)") + ylab("Count") + ggtitle("Bootstrap Distribution of the Sample Mean")
 
 ```
 
@@ -369,22 +441,29 @@ regupper <- yreg + z * seyreg
 yreg
 c(reglower, regupper)
 ```
+
+
+
+
+
 ##Boxplot visualization for the class skip percentage
 ```{r}
-#First me must find the percentage of classes skipped and their year of study
-
-
-
-
+ggplot(Skip_class.imputed, aes(y = Percentage.Skip)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Percentage of Classes Skipped", y = "Percentage Skipped (%)")
 
 ```
 
 
-##Boxplot visualization for the class skip percentage
+##Boxplot visualization for the class skip percentage in correlation to year of study
 ```{r}
 
-
-
+ggplot(Skip_class.imputed, aes(x = Year.Study, y = Percentage.Skip, fill = Year.Study)) +
+  geom_boxplot() +
+  labs(title = "Percentage Skipped by Year of Study",
+       x = "Year of Study",
+       y = "Percentage Skipped in %") +
+  scale_color_brewer(palette = "pastell1")
 
 
 ```
