@@ -114,6 +114,81 @@ hist(`Year.Study`,col="gold2")
 hist(`Options.Main`, col="lightskyblue")
 hist(`Factor.not.to.skip`, col="lightcyan3")
 ```
+#Reasons students would skip class
+```{r}
+Science_pop <- 7400
+Sample_sn <- 40
+Study_num <- 14
+Not_useful <- 13
+Other_reason <- 7
+Study_p <- 14/40
+NUsef_p <- 13/40
+Other_p <- 7/40
+Person_p <- 2/40
+
+moe_stud <- qnorm(.975)*sqrt((Study_p*(1-Study_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_stud
+lowstudy <- Study_p-moe_stud
+upstudy <- Study_p+moe_stud
+lowstudy
+upstudy
+
+moe_usef <- qnorm(.975)*sqrt((NUsef_p*(1-NUsef_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_usef
+lowusef <- NUsef_p-moe_usef
+upusef <- NUsef_p+moe_usef
+lowusef
+upusef
+
+moe_other <- qnorm(.975)*sqrt((Other_p*(1-Other_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_other
+lowother <- Other_p-moe_other
+upother <- Other_p+moe_other
+lowother
+upother
+
+moe_person <- qnorm(.975)*sqrt((Person_p*(1-Person_p)/39)*((Science_pop-Sample_sn)/Science_pop))
+moe_person
+lowperson <- Person_p-moe_person
+uperson <- Person_p+moe_person
+lowperson
+uperson
+
+misc.p <- 6/40
+
+moe_misc <- qnorm(0.975)*sqrt((misc.p*(1-misc.p)/39)*((Science_pop-Sample_sn)/Science_pop))
+
+misc.lb <- misc.p - moe_misc
+misc.ub <- misc.p + moe_misc
+```
+
+Data visualization
+```{r}
+#creating a vector with all possible responses for reasons students would not skip class
+responses <- c("Study", "Not Interesting/Useful", "Other", "3 Misc. Options")
+
+#combined all proportions, lower bounds and upper bounds of each response and saved them in corresponding vectors
+prop <- c(Study_p, NUsef_p, Other_p, misc.p)
+lb <- c(lowstudy, lowusef, lowother, misc.lb)
+ub <- c(upstudy, upusef, upother, misc.ub)
+
+
+data <- data.frame(responses, prop, lb, ub)
+
+#plotting all the confidence intervals and answer proportions into a bar plot to compare each response
+ggplot(data, aes(x = responses, y = prop, fill = responses)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin =lb, ymax =ub),  
+    color = "black") + 
+    
+  labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
+  scale_color_brewer(palette = "Paired")
+
+
+```
+
+
 ##Reasons not to skip class (Population Proportion Estimates)
 
 Reason to not skip class proportion (Top 2)
@@ -244,11 +319,13 @@ all.prop <- c(participation.p, marks.p, no.material.p, being.diligent.p)
 all.lb <- c(participation.lb, marks.lb, no.material.lb, diligent.lb)
 all.ub <- c(participation.ub, marks.ub, no.material.ub, diligent.ub)
 
+plot_data <- data.frame(possible.responses, all.prop, all.lb, all.ub)
+
 #plotting all the confidence intervals and answer proportions into a bar plot to compare each response
-ggplot(plot_data, aes(x = possible.responses, y = prop, fill = possible.responses)) + 
+ggplot(plot_data, aes(x = possible.responses, y = all.prop, fill = possible.responses)) + 
   geom_bar(stat = "identity") +
   geom_errorbar(
-    aes(ymin = lb, ymax = ub),  
+    aes(ymin = all.lb, ymax = all.ub),  
     color = "black") + 
     
   labs(title = "Reasons for Students Not to Skip Class (Proportion with 95% CI)", x = "Response", y = "Proportion") +
@@ -386,7 +463,7 @@ ggplot(Skip_class.imputed, aes(x = Year.Study, y = Percentage.Skip, fill = Year.
   labs(title = "Percentage Skipped by Year of Study",
        x = "Year of Study",
        y = "Percentage Skipped in %") +
-  scale_color_brewer(palette = "BuPu")
+  scale_color_brewer(palette = "pastell1")
 
 
 ```
