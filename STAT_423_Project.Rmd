@@ -407,26 +407,13 @@ library(car)
 # Run Levene's Test
 leveneTest(Percentage.Skip ~ as.factor(Year.Study), data = Skip_class.imputed)
 
-# Gender
-leveneTest(Percentage.Skip ~ as.factor(Gender), data = Skip_class.imputed)
-
-# Types.Classes
-leveneTest(Percentage.Skip ~ as.factor(Types.Classes), data = Skip_class.imputed)
-
-# Options.Main
-leveneTest(Percentage.Skip ~ as.factor(Options.Main), data = Skip_class.imputed)
-
-# Review.missed.material
-leveneTest(Percentage.Skip ~ as.factor(Review.missed.material), data = Skip_class.imputed)
-
-# Grades.affected
-leveneTest(Percentage.Skip ~ as.factor(Grades.affected), data = Skip_class.imputed)
-
-# Transport
-leveneTest(Percentage.Skip ~ as.factor(Transport), data = Skip_class.imputed)
+# Reasons
+leveneTest(Percentage.Skip ~ as.factor(Reason), data = Skip_class.imputed)
 
 # Factor.not.to.skip
 leveneTest(Percentage.Skip ~ as.factor(Factor.not.to.skip), data = Skip_class.imputed)
 
 ```
-
+```{r}
+tapply(Skip_class.imputed$Percentage.Skip, Skip_class.imputed$Year.Study, mean, na.rm = TRUE)
+```
