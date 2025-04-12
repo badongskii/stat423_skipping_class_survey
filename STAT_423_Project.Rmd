@@ -497,3 +497,18 @@ leveneTest(Percentage.Skip ~ as.factor(Factor.not.to.skip), data = Skip_class.im
 ```{r}
 tapply(Skip_class.imputed$Percentage.Skip, Skip_class.imputed$Year.Study, mean, na.rm = TRUE)
 ```
+
+
+
+```{r}
+#If REbar(Ybar_regression, Ybar_ratio) > 1, then ratio estimation is less precise than regression estimation.
+mse_reg <- mse.yrs
+srsq_ratio <- var.rhat
+RE_bar <- ((7360/7400)(srsq_ratio/40))/((7360/7400)(mse_reg/40))
+cat("REbar =", RE_bar, " > 1, meaning Ratio estimation is less recise than ratio estimation.")
+#OR if (B1-Rbar)^2 > 0 then Regression estimation is more efficient
+beta_one <- 5.26
+efficiency <- (beta_one-rhat.yr)^2
+cat("(B1-Rbar)^2 =", efficiency, " > 0, we can confirm that Regression estimation is more efficient than ratio estimation.")
+
+```
