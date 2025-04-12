@@ -208,6 +208,7 @@ most.combined.error <- sqrt((prop.most.combined*(1 - prop.most.combined)/(n - 1)
 most.combined.lb <- prop.most.combined - z * most.combined.error #lower bound for CI
 most.combined.ub <- prop.most.combined + z * most.combined.error #upper bound for CI
 
+prop.most.combined
 cat("95% CI: [", most.combined.lb, ",", most.combined.ub, "]\n")
 ```
 Conclusion: We can say with 95% confidence that between 50% and 80% of science students would choose not to skip class due to required attendance and lack of online material.
@@ -294,6 +295,7 @@ no.material.error <- z * sqrt((no.material.p*(1 - no.material.p)/(n - 1))*((N - 
 no.material.lb <- no.material.p - no.material.error
 no.material.ub <- no.material.p + no.material.error
 
+no.material.p
 c(no.material.lb, no.material.ub)
 ```
 
@@ -463,7 +465,6 @@ ggplot(Skip_class.imputed, aes(x = Year.Study, y = Percentage.Skip, fill = Year.
   labs(title = "Percentage Skipped by Year of Study",
        x = "Year of Study",
        y = "Percentage Skipped in %") 
-  #scale_color_brewer(palette = "")
 
 
 ```
